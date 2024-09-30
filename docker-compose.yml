@@ -1,0 +1,14 @@
+version : '3'
+
+services:
+
+  discord-db:
+    container_name: discord-db
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: discord-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
+    ports:
+      - "5433:5432"
