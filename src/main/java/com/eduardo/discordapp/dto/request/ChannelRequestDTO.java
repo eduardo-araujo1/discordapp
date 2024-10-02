@@ -4,6 +4,6 @@ import com.eduardo.discordapp.model.Server;
 
 public record ChannelRequestDTO(
         String name,
-        Server server
+        String  serverId
 ) {
 }
