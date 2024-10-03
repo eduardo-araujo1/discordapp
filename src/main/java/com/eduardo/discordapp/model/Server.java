@@ -1,5 +1,6 @@
 package com.eduardo.discordapp.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Server {
     private User owner;
 
     @OneToMany(mappedBy = "server", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Channel> channels;
 
 

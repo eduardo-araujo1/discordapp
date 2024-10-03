@@ -4,6 +4,8 @@ import com.eduardo.discordapp.config.TokenService;
 import com.eduardo.discordapp.dto.request.AuthenticationDTO;
 import com.eduardo.discordapp.dto.request.RegisterDTO;
 import com.eduardo.discordapp.enums.UserRole;
+import com.eduardo.discordapp.exception.InvalidPasswordException;
+import com.eduardo.discordapp.exception.UserAlreadyExistsException;
 import com.eduardo.discordapp.model.User;
 import com.eduardo.discordapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ public class AuthenticationService implements UserDetailsService {
         User user = loadUserByUsername(authenticationDTO.email());
 
         if (user == null || !passwordEncoder.matches(authenticationDTO.password(), user.getPassword())) {
-            throw new RuntimeException("Email ou senha inválidos.");
+            throw new InvalidPasswordException("Email ou senha inválidos.");
         }
         return tokenService.generateToken(user);
     }
@@ -36,7 +38,7 @@ public class AuthenticationService implements UserDetailsService {
     public void register(RegisterDTO registerDTO) {
         String email = registerDTO.email();
         if (userRepository.findByEmail(email) != null) {
-            throw new RuntimeException("O usuário com o e-mail fornecido já existe.");
+            throw new UserAlreadyExistsException("O usuário com o e-mail " + email + " já existe.");
         }
         String encryptedPassword = passwordEncoder.encode(registerDTO.password());
 

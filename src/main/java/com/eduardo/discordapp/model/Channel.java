@@ -1,12 +1,12 @@
 package com.eduardo.discordapp.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +26,7 @@ public class Channel {
 
     @ManyToOne
     @JoinColumn(name = "server_id", nullable = false)
+    @JsonBackReference
     private Server server;
 
 }

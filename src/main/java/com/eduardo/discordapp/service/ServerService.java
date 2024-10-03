@@ -3,16 +3,17 @@ package com.eduardo.discordapp.service;
 import com.eduardo.discordapp.converter.ServerConverter;
 import com.eduardo.discordapp.dto.request.ServerRequestDTO;
 import com.eduardo.discordapp.dto.response.ServerResponseDTO;
+import com.eduardo.discordapp.exception.AccessDeniedException;
+import com.eduardo.discordapp.exception.ServerNotFoundException;
+import com.eduardo.discordapp.exception.UserNotFoundException;
 import com.eduardo.discordapp.model.Server;
 import com.eduardo.discordapp.model.User;
 import com.eduardo.discordapp.repository.ServerRepository;
 import com.eduardo.discordapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class ServerService {
     public ServerResponseDTO registerServer(ServerRequestDTO requestDTO) {
 
         User owner = userRepository.findById(UUID.fromString(requestDTO.userId()))
-                .orElseThrow(() -> new RuntimeException("Usuario não encontrado."));
+                .orElseThrow(() -> new UserNotFoundException("Usuario não encontrado."));
 
         Server newServer = converter.toModel(requestDTO, owner);
         Server savedServer = serverRepository.save(newServer);
@@ -42,16 +43,23 @@ public class ServerService {
                 .collect(Collectors.toList());
     }
 
+    public ServerResponseDTO findById(String serverId) {
+        Server server = serverRepository.findById(UUID.fromString(serverId))
+                .orElseThrow(() -> new ServerNotFoundException("Servidor não encontrado"));
+
+        return converter.toDto(server);
+    }
+
     public void deleteServer(String serverId, String userId) {
         Server server = serverRepository.findById(UUID.fromString(serverId))
-                .orElseThrow(() -> new RuntimeException("Servidor não encontrado"));
+                .orElseThrow(() -> new ServerNotFoundException("Servidor não encontrado"));
 
         User user = userRepository.findById(UUID.fromString(userId))
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
 
 
         if (!isUserAdminForServer(user, server)) {
-            throw new RuntimeException("Acesso negado: Apenas o administrador do servidor pode realizar esta ação.");
+            throw new AccessDeniedException("Acesso negado: Apenas o administrador do servidor pode realizar esta ação.");
         }
 
         serverRepository.delete(server);
