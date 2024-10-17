@@ -51,15 +51,21 @@ public class ServerController {
     }
 
     @PostMapping("/{serverId}/channels")
-    public ResponseEntity<ChannelResponseDTO> createChannelForServer(@Valid @PathVariable String serverId,
-                                                                     @RequestBody ChannelRequestDTO dto) {
-        channelService.createChannelForServer(serverId, dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<ChannelResponseDTO> createChannelForServer(@Valid @RequestBody ChannelRequestDTO dto,
+                                                                     @Valid @PathVariable String serverId) {
+        ChannelResponseDTO channelResponse = channelService.createChannelForServer(dto, serverId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(channelResponse);
     }
 
     @GetMapping("/{serverId}/channels")
     public ResponseEntity<List<ChannelResponseDTO>> findChannelsByServerId(@PathVariable String serverId) {
         List<ChannelResponseDTO> channels = channelService.findChannelsByServerId(serverId);
+        return ResponseEntity.ok(channels);
+    }
+
+    @GetMapping("/{serverId}/channels/{channelId}")
+    public ResponseEntity<ChannelResponseDTO> findChannelsById(@PathVariable String channelId) {
+        ChannelResponseDTO channels = channelService.findChannelById(channelId);
         return ResponseEntity.ok(channels);
     }
 

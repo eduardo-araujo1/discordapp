@@ -9,15 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChannelConverter {
 
-    public Channel toModel(ChannelRequestDTO dto, Server serverId) {
+    public Channel toModel(ChannelRequestDTO dto,  Server server) {
         Channel channel = new Channel();
         channel.setName(dto.name());
-        channel.setServer(serverId);
+        channel.setServer(server);
         return channel;
     }
 
     public ChannelResponseDTO toDto(Channel channel) {
         return new ChannelResponseDTO(
+                channel.getChannelId().toString(),
                 channel.getName()
         );
     }

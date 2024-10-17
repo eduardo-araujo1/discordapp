@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record ServerResponseDTO(
+        String id,
         String serverName,
         List<Channel> channels,
         LocalDateTime createdAt

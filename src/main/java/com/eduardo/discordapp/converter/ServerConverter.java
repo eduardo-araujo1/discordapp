@@ -18,6 +18,7 @@ public class ServerConverter {
 
     public ServerResponseDTO toDto(Server server) {
         return new ServerResponseDTO(
+                server.getServerId().toString(),
                 server.getServerName(),
                 server.getChannels(),
                 server.getCreatedAt()
