@@ -12,6 +12,7 @@ import com.eduardo.discordapp.repository.ServerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,7 +33,10 @@ public class ChannelService {
         Channel channel = channelConverter.toModel(channelRequestDTO, server);
         Channel savedChannel = channelRepository.save(channel);
 
-        server.getChannels().add(savedChannel);
+        List<Channel> channels = new ArrayList<>(server.getChannels());
+        channels.add(savedChannel);
+        server.setChannels(channels);
+
         serverRepository.save(server);
 
         return channelConverter.toDto(savedChannel);
