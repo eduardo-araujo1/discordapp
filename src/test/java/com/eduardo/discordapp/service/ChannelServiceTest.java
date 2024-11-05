@@ -10,6 +10,7 @@ import com.eduardo.discordapp.repository.ChannelRepository;
 import com.eduardo.discordapp.repository.ServerRepository;
 import com.eduardo.discordapp.util.ChannelTestUtil;
 import com.eduardo.discordapp.util.ServerTestUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -49,6 +50,7 @@ public class ChannelServiceTest {
     Server server = ServerTestUtil.createServer();
 
     @Test
+    @DisplayName("Deve criar um novo canal e retornar ChannelResponseDTO com sucesso")
     public void createChannel_Success() {
         when(serverRepository.findById(ServerTestUtil.SERVER_ID)).thenReturn(Optional.of(server));
         when(converter.toModel(channelRequestDTO, server)).thenReturn(channelEntity);
@@ -67,6 +69,7 @@ public class ChannelServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar exceção ao tentar criar canal para servidor inexistente")
     public void createChannel_ServerNotFound() {
         when(serverRepository.findById(ServerTestUtil.SERVER_ID))
                 .thenReturn(Optional.empty());
@@ -81,6 +84,7 @@ public class ChannelServiceTest {
     }
 
     @Test
+    @DisplayName("Deve retornar lista de ChannelResponseDTOs para o ID do servidor especificado")
     public void findChannelsByServerId_ReturnsListOfChannelResponseDTOs() {
         String serverId = ServerTestUtil.SERVER_ID.toString();
         List<Channel> channelList = Arrays.asList(
@@ -110,6 +114,7 @@ public class ChannelServiceTest {
     }
 
     @Test
+    @DisplayName("Deve retornar ChannelResponseDTO para o ID do canal especificado")
     public void findChannelById_ReturnsChannelResponseDTO() {
         String channelId = ChannelTestUtil.CHANNEL_ID.toString();
         Channel channel = ChannelTestUtil.createChannel();

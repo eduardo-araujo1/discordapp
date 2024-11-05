@@ -12,6 +12,7 @@ import com.eduardo.discordapp.repository.ServerRepository;
 import com.eduardo.discordapp.repository.UserRepository;
 import com.eduardo.discordapp.util.ServerTestUtil;
 import com.eduardo.discordapp.util.UserTestUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -50,6 +51,7 @@ public class ServerServiceTest {
     User owner = UserTestUtil.createUser();
 
     @Test
+    @DisplayName("Criação de servidor bem-sucedida")
     public void createServer_Success() {
         when(userRepository.findById(UserTestUtil.USER_ID))
                 .thenReturn(Optional.of(owner));
@@ -70,6 +72,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Falha na criação de servidor: Usuário não encontrado")
     public void createServer_UserNotFound() {
         when(userRepository.findById(UserTestUtil.USER_ID)).thenThrow(UserNotFoundException.class);
 
@@ -80,6 +83,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Consulta de todos os servidores - retorna lista de ServerResponseDTOs")
     public void findAll_ReturnsListOfServerResponseDTOs() {
         Server server1 = ServerTestUtil.createServer();
         Server server2 = ServerTestUtil.createServer();
@@ -100,6 +104,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Consulta por ID - servidor existente")
     public void findById_ExistingServer_ReturnsServerResponseDTO() {
         String serverId = ServerTestUtil.SERVER_ID.toString();
         Server server = ServerTestUtil.createServer();
@@ -116,6 +121,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Consulta por ID - servidor não encontrado")
     public void findById_NonExistingServer_ThrowsServerNotFoundException() {
         String serverId = ServerTestUtil.SERVER_ID.toString();
         when(serverRepository.findById(UUID.fromString(serverId))).thenReturn(Optional.empty());
@@ -129,6 +135,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Excluir servidor - usuário admin")
     public void deleteServer_AdminUser_DeletesServer() {
         String serverId = ServerTestUtil.SERVER_ID.toString();
         String userId = UserTestUtil.USER_ID.toString();
@@ -147,6 +154,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Excluir servidor - usuário sem permissão")
     public void deleteServer_NonAdminUser_ThrowsAccessDeniedException() {
         String serverId = ServerTestUtil.SERVER_ID.toString();
         String userId = UserTestUtil.USER_ID.toString();
@@ -168,6 +176,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Excluir servidor - servidor inexistente")
     public void deleteServer_ServerNotFound_ThrowsServerNotFoundException() {
         String serverId = ServerTestUtil.SERVER_ID.toString();
         String userId = UserTestUtil.USER_ID.toString();
@@ -183,6 +192,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Excluir servidor - usuário não encontrado")
     public void deleteServer_UserNotFound_ThrowsUserNotFoundException() {
         String serverId = ServerTestUtil.SERVER_ID.toString();
         String userId = UserTestUtil.USER_ID.toString();
@@ -201,6 +211,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Verificação de usuário admin")
     public void isUserAdminForServer_AdminUser_ReturnsTrue() {
         User adminUser = UserTestUtil.createUser();
         Server server = ServerTestUtil.createServer();
@@ -212,6 +223,7 @@ public class ServerServiceTest {
     }
 
     @Test
+    @DisplayName("Verificação de usuário admin - usuário não é admin")
     public void isUserAdminForServer_NonAdminUser_ReturnsFalse() {
         User nonAdminUser = UserTestUtil.createUser();
         User adminUser = UserTestUtil.createUser();

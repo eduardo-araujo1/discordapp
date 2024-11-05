@@ -8,6 +8,7 @@ import com.eduardo.discordapp.exception.UserAlreadyExistsException;
 import com.eduardo.discordapp.model.User;
 import com.eduardo.discordapp.repository.UserRepository;
 import com.eduardo.discordapp.util.UserTestUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -36,6 +37,7 @@ public class AuthenticationServiceTest {
     private AuthenticationService service;
 
     @Test
+    @DisplayName("Deve retornar o usuário ao carregar pelo email")
     public void loadUserByUsername_ShouldReturnUser() {
         String email = UserTestUtil.EMAIL;
         User user = UserTestUtil.createUser();
@@ -50,6 +52,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    @DisplayName("Deve retornar o token ao fazer login com credenciais válidas")
     public void login_ShouldReturnToken_WhenCredentialsAreValid() {
         AuthenticationDTO authDto = new AuthenticationDTO(UserTestUtil.EMAIL, UserTestUtil.PASSWORD);
         User user = UserTestUtil.createUser();
@@ -69,6 +72,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar exceção ao fazer login com senha inválida")
     public void login_ShouldThrowException_WhenPasswordIsInvalid() {
         AuthenticationDTO authDto = new AuthenticationDTO(UserTestUtil.EMAIL, "wrongPassword");
         User user = UserTestUtil.createUser();
@@ -82,6 +86,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar exceção ao fazer login com e-mail inexistente")
     public void login_ShouldThrowException_WhenUserDoesNotExist() {
         AuthenticationDTO authDto = new AuthenticationDTO("nonexistent@example.com", UserTestUtil.PASSWORD);
 
@@ -92,6 +97,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    @DisplayName("Deve registrar e salvar novo usuário quando o e-mail está disponível")
     public void register_ShouldSaveNewUser_WhenEmailIsAvailable() {
         RegisterDTO registerDto = new RegisterDTO(UserTestUtil.USERNAME, UserTestUtil.EMAIL, UserTestUtil.PASSWORD);
         String encodedPassword = "encodedPassword";
@@ -114,6 +120,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar exceção ao tentar registrar um usuário com e-mail já existente")
     public void register_ShouldThrowException_WhenEmailAlreadyExists() {
         RegisterDTO registerDto = new RegisterDTO(UserTestUtil.USERNAME, UserTestUtil.EMAIL, UserTestUtil.PASSWORD);
         User existingUser = UserTestUtil.createUser();

@@ -7,6 +7,7 @@ import com.eduardo.discordapp.model.User;
 import com.eduardo.discordapp.repository.ChannelRepository;
 import com.eduardo.discordapp.repository.MessageRepository;
 import com.eduardo.discordapp.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +43,7 @@ public class MessageServiceTest {
     private MessageService messageService;
 
     @Test
+    @DisplayName("Deve salvar uma mensagem e retornar o MessageDTO correspondente")
     public void saveMessage_ShouldSaveAndReturnMessageDTO() {
         String channelId = UUID.randomUUID().toString();
         String authorId = UUID.randomUUID().toString();
@@ -79,6 +81,7 @@ public class MessageServiceTest {
     }
 
     @Test
+    @DisplayName("Deve retornar uma lista de Messages para o ID do canal especificado")
     public void getMessagesByChannelId_ShouldReturnListOfMessageDTOs() {
         String channelId = UUID.randomUUID().toString();
         Channel channel = new Channel();
