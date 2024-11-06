@@ -20,33 +20,21 @@ import java.util.List;
 public class MessageController {
 
     private final MessageService messageService;
-    private final SimpMessagingTemplate messagingTemplate;
 
 
-    @PostMapping()
-    public ResponseEntity<MessageDTO> sendMessage(
-            @PathVariable String serverId,
-            @PathVariable String channelId,
-            @RequestBody MessageDTO messageDTO) {
+    @MessageMapping("/servers/{serverId}/channels/{channelId}/messages")
+    @SendTo("/topic/servers/{serverId}/channels/{channelId}")
+    public MessageDTO handleMessage(
+            @DestinationVariable String serverId,
+            @DestinationVariable String channelId,
+            MessageDTO messageDTO) {
 
-        log.info("Recebendo mensagem: {} no canal: {} do servidor: {}", messageDTO, channelId, serverId);
         MessageDTO savedMessage = messageService.saveMessage(channelId, messageDTO);
 
-        String destination = "/topic/servers/" + serverId + "/channels/" + channelId;
-        messagingTemplate.convertAndSend(destination, savedMessage);
+        log.info("Mensagem salva e enviada para o canal: {} do servidor: {} do userId: {}",
+                channelId, serverId, messageDTO.authorId());
 
-        log.info("Mensagem enviada para o canal: {} do servidor: {}", channelId, serverId);
-        return ResponseEntity.ok(savedMessage);
-    }
-
-    @MessageMapping("/ws/servers/{serverId}/channels/{channelId}")
-    @SendTo("/topic/servers/{serverId}/channels/{channelId}")
-    public MessageDTO listenMessages(@DestinationVariable String serverId,
-                                     @DestinationVariable String channelId,
-                                     MessageDTO messageDTO) {
-
-        log.info("Mensagem recebida no canal: {} do servidor: {}: {}", channelId, serverId, messageDTO);
-        return messageDTO;
+        return savedMessage;
     }
 
     @GetMapping
@@ -55,4 +43,3 @@ public class MessageController {
         return ResponseEntity.ok(messages);
     }
 }
-

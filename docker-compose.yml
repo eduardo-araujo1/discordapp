@@ -15,7 +15,7 @@ services:
       - app-network
 
   discapp:
-    image: edusoares/discapp:v1.0
+    image: edusoares/discapp:v2.0
     container_name: discapp
     restart: always
     ports:

@@ -32,7 +32,6 @@ public class MessageService {
 
         User author = userRepository.findById(UUID.fromString(messageDTO.authorId()))
                 .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado"));
-        System.out.println("Username do autor: " + author.getUsername());
 
         Message message = new Message();
         message.setContent(messageDTO.content());
