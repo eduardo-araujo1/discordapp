@@ -29,12 +29,12 @@ jobs:
     runs-on: [aws-ec2]
     steps:
       - name: Pull image from docker hub
-        run: docker pull edusoares/discapp:latest
+        run: sudo docker pull edusoares/discapp:latest
       - name: Delete old container
-        run: docker rm -f discapp-container || true
+        run: sudo docker rm -f discapp-container || true
       - name: Run docker container
         run: |
-          docker run -d -p 8080:8080 --name discapp-container \
+          sudo docker run -d -p 8080:8080 --name discapp-container \
             -e SPRING_DATASOURCE_URL=${{secrets.DB_URL}} \
             -e SPRING_DATASOURCE_USERNAME=${{secrets.DB_USER}} \
             -e SPRING_DATASOURCE_PASSWORD=${{secrets.DB_PASSWORD}} \
