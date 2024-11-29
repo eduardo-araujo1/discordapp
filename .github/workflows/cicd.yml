@@ -1,0 +1,41 @@
+name: Deploy no ambiente de desenvolvimento.
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "21"
+      - name: Build project
+        run: mvn clean install
+      - name: Login to docker hub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Build docker image
+        run: docker build -t edusoares/discapp .
+      - name: Publish image do docker hub
+        run: docker push edusoares/discapp:latest
+
+  deploy:
+    needs: build
+    runs-on: [aws-ec2]
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull edusoares/discapp:latest
+      - name: Delete old container
+        run: docker rm -f discapp-container || true
+      - name: Run docker container
+        run: |
+          docker run -d -p 8080:8080 --name discapp-container \
+            -e SPRING_DATASOURCE_URL=${{secrets.DB_URL}} \
+            -e SPRING_DATASOURCE_USERNAME=${{secrets.DB_USER}} \
+            -e SPRING_DATASOURCE_PASSWORD=${{secrets.DB_PASSWORD}} \
+            edusoares/discapp
