@@ -26,6 +26,7 @@ services:
       DB_NAME: discord-db
       DB_USER: postgres
       DB_PASSWORD: postgres
+      SPRING_PROFILES_ACTIVE: dev
     depends_on:
       - discord-db
     networks:

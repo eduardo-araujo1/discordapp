@@ -39,4 +39,5 @@ jobs:
             -e DB_USER=postgres \
             -e DB_PASSWORD=${{secrets.DB_PASSWORD}} \
             -e JWT_SECRET=${{secrets.JWT_SECRET}} \
+            -e SPRING_PROFILES_ACTIVE=prod \
             edusoares/discapp
